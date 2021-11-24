@@ -1,6 +1,8 @@
 import React from "react";
 
 import ReactDOM from "react-dom";
+import Client from "./Client";
+import ClientForm from "./clientForm";
 
 class App extends React.Component {
   state = {
@@ -12,13 +14,17 @@ class App extends React.Component {
   };
 
   handleDelete = (id) => {
-    const clients = this.state.clients.slice();
-    const index = clients.findIndex(function (client) {
-      return client.id === id;
-    });
+    const clients = [...this.state.clients];
+    const index = clients.findIndex((client) => client.id === id);
     clients.splice(index, 1);
-    this.setState({ clients: clients });
+    this.setState({ clients });
     console.log(id);
+  };
+
+  handleAdd = (client) => {
+    const clients = [...this.state.clients];
+    clients.push({ client });
+    this.setState({ clients });
   };
 
   render() {
@@ -29,15 +35,10 @@ class App extends React.Component {
         <h1> {titre} </h1>
         <ul>
           {this.state.clients.map((client) => (
-            <li>
-              {client.nom}
-              {""}
-              <button onClick={() => this.handleDelete(client.id)}> x </button>
-            </li>
+            <Client details={client} onDelete={this.handleDelete} />
           ))}
         </ul>
-        <input type="text" placeholder="entrez" />
-        <button>confirmez</button>
+        <ClientForm onClientAdd={this.handleAdd} />
       </div>
     );
   }
